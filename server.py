@@ -24,14 +24,18 @@ def melon_details(melon_id):
     melon = melons.get_by_id(melon_id)
     return render_template("melon_details.html", melon=melon )
 
-@app.route("/add_to_cart/<melon_id>")
+@app.route("/add_to_cart/<melon_id>", methods=["POST"])
 def add_to_cart(melon_id):
+    quant= int(request.form['quantity'])
+
+    if 'username' not in session:
+        return redirect("/login")
     
     if 'cart' not in session:
         session['cart'] = {}
     cart = session['cart']
 
-    cart[melon_id] = cart.get(melon_id, 0) + 1
+    cart[melon_id] = cart.get(melon_id, 0) + quant
     session.modified = True
     flash(f"Melon {melon_id} successfully added to your cart")
     print(cart)
